@@ -1,0 +1,26 @@
+{
+  "name": "ifeech/smsaero-v2",
+  "description": "The library implement SMS Aero api v2",
+  "type": "library",
+  "keywords": [
+    "sms",
+    "api"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Feech",
+      "email": "s.feech@gmail.com"
+    }
+  ],
+  "require": {
+    "guzzlehttp/guzzle": "~6",
+    "php": ">=7.2",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Feech\\SmsAero\\": "src/"
+    }
+  }
+}
