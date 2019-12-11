@@ -5,8 +5,7 @@ SMS Aero V2
 Зависимости
 ------------
 
-* PHP 7.2 и выше.
-* ext-json
+* PHP 7.2 и выше
 * [guzzlehttp](https://packagist.org/packages/guzzlehttp/guzzle)
 
 > Можно использовать свою реализацию клиента без использования пакета Guzzle
@@ -19,7 +18,7 @@ SMS Aero V2
 ````json
 {
     "require": {
-        "ifeech/smsaero-v2": "~1.0"
+        "ifeech/smsaero-v2": "^1.0"
     }
 }
 ````
@@ -46,13 +45,15 @@ $auth = new Auth('email', 'pass');
 $client = new ClientGuzzle($auth);
 
 $smsAero = new SmsAero($client);
-$sms1 = new Sms('79511234567', 'Тестовое сообщение', SMS::CHANNEL_TYPE_INTERNATIONAL);
-$sms2 = new Sms(['79511234567', '79519876543'], 'Тестовое сообщение', SMS::CHANNEL_TYPE_DIGITAL);
+$sms1 = new Sms('79591234567', 'Тестовое сообщение', SMS::CHANNEL_TYPE_INTERNATIONAL);
+$sms2 = new Sms(['79591234567', '79599876543'], 'Тестовое сообщение', SMS::CHANNEL_TYPE_DIGITAL);
 
 try {
     $smsAero->testSend($sms1); // тестовое сообщение
     $smsAero->send($sms1); // отправка сообщения
-    $smsAero->bulkSend($sms1); // массовая отправка сообщений
+    $response = $smsAero->bulkSend($sms1); // массовая отправка сообщений
+
+    $responseArray = json_decode($response, true); // ответ в виде ассоциативного массива
 } catch (Exception $e) {
     $e->getMessage();
 }

@@ -2,6 +2,7 @@
 
 namespace Feech\SmsAero\Sms;
 
+
 interface ISms
 {
     /**

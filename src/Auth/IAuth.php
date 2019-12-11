@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Feech\SmsAero\Auth;
 
 

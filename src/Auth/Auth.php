@@ -34,7 +34,7 @@ class Auth implements IAuth
      * @param string $password
      * @param string $sign
      */
-    public function __construct(string $email, string $password, string $sign = '')
+    public function __construct(string $email, string $password, string $sign = 'SMS Aero')
     {
         $this->email = $email;
         $this->password = $password;

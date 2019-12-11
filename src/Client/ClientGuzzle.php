@@ -2,17 +2,20 @@
 
 namespace Feech\SmsAero\Client;
 
+
+use Exception;
 use Feech\SmsAero\Auth\IAuth;
+use GuzzleHttp\Client;
 
 class ClientGuzzle implements IClient
 {
     /**
      * @var string
      */
-    private $url = 'https://gate.smsaero.ru/v2';
+    private const URL = 'https://gate.smsaero.ru/v2';
 
     /**
-     * @var \GuzzleHttp\Client
+     * @var Client
      */
     private $client;
 
@@ -23,7 +26,7 @@ class ClientGuzzle implements IClient
      */
     public function __construct(IAuth $auth)
     {
-        $this->client = new \GuzzleHttp\Client([
+        $this->client = new Client([
             'auth' => [$auth->getEmail(), $auth->getPassword()]
         ]);
     }
@@ -33,21 +36,21 @@ class ClientGuzzle implements IClient
      * @param array  $params
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    private function request(string $path, array $params = []): string
+    public function request(string $path, array $params = []): string
     {
-        $uri = $this->getUrl($path);
-        if (!$uri) {
-            throw new \Exception('Path is not correct');
+        $url = $this->getUrl($path);
+        if (!$url) {
+            throw new Exception('Path is not correct');
         }
 
-        $response = $this->client->post($uri, ['form_params' => $params]);
+        $response = $this->client->post($url, ['form_params' => $params]);
 
         if ($response->getStatusCode() === 200) {
-            return (string)$response->getBody();
+            return $response->getBody()->getContents();
         } else {
-            throw new \Exception(sprintf('Smsaero.ru problem. Status code is %s', $response->getStatusCode()), $response->getStatusCode());
+            throw new Exception(sprintf('Smsaero.ru problem. Status code is %s', $response->getStatusCode()), $response->getStatusCode());
         }
     }
 
@@ -58,30 +61,6 @@ class ClientGuzzle implements IClient
      */
     private function getUrl(string $path): string
     {
-        return (is_string($path)) ? $this->url . $path : '';
-    }
-
-    /**
-     * @param string $path
-     * @param array  $params
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public function requestArray(string $path, array $params = []): array
-    {
-        return json_decode($this->request($path, $params), true);
-    }
-
-    /**
-     * @param string $path
-     * @param array  $params
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function requestStr(string $path, array $params = []): string
-    {
-        return $this->request($path, $params);
+        return (is_string($path)) ? self::URL . $path : '';
     }
 }

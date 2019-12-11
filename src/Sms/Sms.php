@@ -2,6 +2,7 @@
 
 namespace Feech\SmsAero\Sms;
 
+
 class Sms implements ISms
 {
     /**
@@ -21,13 +22,13 @@ class Sms implements ISms
      */
     private $channel;
 
-    const CHANNEL_TYPE_INFO = 'INFO';
-    const CHANNEL_TYPE_DIRECT = 'DIRECT';
-    const CHANNEL_TYPE_DIGITAL = 'DIGITAL';
-    const CHANNEL_TYPE_SERVICE = 'SERVICE';
-    const CHANNEL_TYPE_INTERNATIONAL = 'INTERNATIONAL';
+    public const CHANNEL_TYPE_INFO = 'INFO';
+    public const CHANNEL_TYPE_DIRECT = 'DIRECT';
+    public const CHANNEL_TYPE_DIGITAL = 'DIGITAL';
+    public const CHANNEL_TYPE_SERVICE = 'SERVICE';
+    public const CHANNEL_TYPE_INTERNATIONAL = 'INTERNATIONAL';
 
-    const CHANNEL_TYPE = [
+    private const CHANNEL_TYPE = [
         'INFO'          => 'Инфоподпись для всех операторов',
         'DIGITAL'       => 'Цифровой канал отправки (допускается только транзакционный трафик)',
         'INTERNATIONAL' => 'Международная доставка (Операторы РФ, Казахстана, Украины и Белоруссии)',

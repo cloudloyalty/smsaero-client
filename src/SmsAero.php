@@ -2,6 +2,8 @@
 
 namespace Feech\SmsAero;
 
+
+use Exception;
 use Feech\SmsAero\Sms\ISms;
 use Feech\SmsAero\Client\IClient;
 
@@ -25,23 +27,23 @@ class SmsAero
     /**
      * Тестовый метод, для проверки авторизации пользователя
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function auth(): array
+    public function auth(): string
     {
-        return $this->client->requestArray('/auth');
+        return $this->client->request('/auth');
     }
 
     /**
      * Карты пользователя
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function cards(): array
+    public function cards(): string
     {
-        return $this->client->requestArray('/cards');
+        return $this->client->request('/cards');
     }
 
     /**
@@ -50,12 +52,12 @@ class SmsAero
      * @param int $sum Сумма пополнения
      * @param int $cardId Идентификационный номер карты
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function addBalance(int $sum, int $cardId): array
+    public function addBalance(int $sum, int $cardId): string
     {
-        return $this->client->requestArray('/balance/add', [
+        return $this->client->request('/balance/add', [
             'sum'    => $sum,
             'cardId' => $cardId
         ]);
@@ -70,12 +72,12 @@ class SmsAero
      * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
      * (в ответ система ждет статус 200)
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function send(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): array
+    public function send(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
     {
-        return $this->client->requestArray('/sms/send', [
+        return $this->client->request('/sms/send', [
             'number'      => $sms->getNumber(),
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
@@ -94,12 +96,12 @@ class SmsAero
      * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
      * (в ответ система ждет статус 200)
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function testSend(ISms $sms, string $sign = 'SMS Aero', int $dateSend = null, string $callbackUrl = null): array
+    public function testSend(ISms $sms, string $sign = 'SMS Aero', int $dateSend = null, string $callbackUrl = null): string
     {
-        return $this->client->requestArray('/sms/testsend', [
+        return $this->client->request('/sms/testsend', [
             'number'      => $sms->getNumber(),
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
@@ -118,12 +120,12 @@ class SmsAero
      * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
      * (в ответ система ждет статус 200)
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function bulkSend(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): array
+    public function bulkSend(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
     {
-        return $this->client->requestArray('/sms/send', [
+        return $this->client->request('/sms/send', [
             'numbers'     => $sms->getListNumbers(),
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
@@ -138,12 +140,12 @@ class SmsAero
      *
      * @param int $id Идентификатор сообщения
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function checkSend(int $id): array
+    public function checkSend(int $id): string
     {
-        return $this->client->requestArray('/sms/status', [
+        return $this->client->request('/sms/status', [
             'id' => $id
         ]);
     }
@@ -155,12 +157,12 @@ class SmsAero
      * @param string $text Фильтровать сообщения по тексту
      * @param int    $page Номер страницы
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function smsList(string $number = null, string $text = null, int $page = 1): array
+    public function smsList(string $number = null, string $text = null, int $page = 1): string
     {
-        return $this->client->requestArray('/sms/list', [
+        return $this->client->request('/sms/list', [
             'page'   => $page,
             'number' => $number,
             'text'   => $text
@@ -174,12 +176,12 @@ class SmsAero
      * @param string $text Фильтровать сообщения по тексту
      * @param int    $page Номер страницы
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function testSmsList(string $number = null, string $text = null, int $page = 1): array
+    public function testSmsList(string $number = null, string $text = null, int $page = 1): string
     {
-        return $this->client->requestArray('/sms/testlist', [
+        return $this->client->request('/sms/testlist', [
             'page'   => $page,
             'number' => $number,
             'text'   => $text
@@ -189,23 +191,23 @@ class SmsAero
     /**
      * Запрос баланса
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function balance(): array
+    public function balance(): string
     {
-        return $this->client->requestArray('/balance');
+        return $this->client->request('/balance');
     }
 
     /**
      * Запрос тарифа
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function tariffs(): array
+    public function tariffs(): string
     {
-        return $this->client->requestArray('/tariffs');
+        return $this->client->request('/tariffs');
     }
 
     /**
@@ -213,12 +215,12 @@ class SmsAero
      *
      * @param string $number Номер абонента
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function blacklistAdd(string $number): array
+    public function blacklistAdd(string $number): string
     {
-        return $this->client->requestArray('/blacklist/add', [
+        return $this->client->request('/blacklist/add', [
             'number' => $number
         ]);
     }
@@ -228,12 +230,12 @@ class SmsAero
      *
      * @param int $id Идентификатор абонента
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function blacklistDelete($id): array
+    public function blacklistDelete($id): string
     {
-        return $this->client->requestArray('/blacklist/delete', [
+        return $this->client->request('/blacklist/delete', [
             'id' => $id
         ]);
     }
@@ -244,12 +246,12 @@ class SmsAero
      * @param null|string $number Номер абонента
      * @param int         $page Пагинация
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function blacklistList(string $number = null, int $page = 1): array
+    public function blacklistList(string $number = null, int $page = 1): string
     {
-        return $this->client->requestArray('/blacklist/list', [
+        return $this->client->request('/blacklist/list', [
             'page'   => $page,
             'number' => $number
         ]);
@@ -260,12 +262,12 @@ class SmsAero
      *
      * @param string $number Номер абонента
      *
-     * @return array
-     * @throws \Exception
+     * @return string
+     * @throws Exception
      */
-    public function operatorNumber(string $number): array
+    public function operatorNumber(string $number): string
     {
-        return $this->client->requestArray('/number/operator', [
+        return $this->client->request('/number/operator', [
             'number' => $number
         ]);
     }
