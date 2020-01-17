@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Feech\SmsAero\Client;
 
-
-use Exception;
+use Feech\SmsAero\Exception\BaseSmsAeroException;
 
 interface IClient
 {
@@ -12,7 +13,7 @@ interface IClient
      * @param array  $params
      *
      * @return string
-     * @throws Exception
+     * @throws BaseSmsAeroException
      */
     public function request(string $path, array $params = []): string;
 }

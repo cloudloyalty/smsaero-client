@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Feech\SmsAero\Client;
 
-
-use Exception;
 use Feech\SmsAero\Auth\IAuth;
+use Feech\SmsAero\Exception\BaseSmsAeroException;
+use Feech\SmsAero\Exception\TransportException;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 
 class ClientGuzzle implements IClient
 {
@@ -15,20 +19,24 @@ class ClientGuzzle implements IClient
     private const URL = 'https://gate.smsaero.ru/v2';
 
     /**
-     * @var Client
+     * @var IAuth
+     */
+    private $auth;
+
+    /**
+     * @var ClientInterface
      */
     private $client;
 
-    /**
-     * ClientGuzzle constructor.
-     *
-     * @param IAuth $auth
-     */
-    public function __construct(IAuth $auth)
+    public function __construct(IAuth $auth, ClientInterface $client = null)
     {
-        $this->client = new Client([
-            'auth' => [$auth->getEmail(), $auth->getPassword()]
-        ]);
+        $this->auth = $auth;
+
+        if ($client === null) {
+            $this->client = new Client();
+        } else {
+            $this->client = $client;
+        }
     }
 
     /**
@@ -36,21 +44,33 @@ class ClientGuzzle implements IClient
      * @param array  $params
      *
      * @return string
-     * @throws Exception
+     * @throws BaseSmsAeroException
      */
     public function request(string $path, array $params = []): string
     {
         $url = $this->getUrl($path);
-        if (!$url) {
-            throw new Exception('Path is not correct');
+
+        try {
+            $response = $this->client->request(
+                'POST',
+                $url,
+                [
+                    'form_params' => $params,
+                    'auth' => [$this->auth->getEmail(), $this->auth->getPassword()],
+                    'http_errors' => true,
+                ]
+            );
+        } catch (GuzzleException $e) {
+            throw TransportException::fromGuzzleException($e);
         }
 
-        $response = $this->client->post($url, ['form_params' => $params]);
-
         if ($response->getStatusCode() === 200) {
-            return $response->getBody()->getContents();
+            return (string) $response->getBody();
         } else {
-            throw new Exception(sprintf('Smsaero.ru problem. Status code is %s', $response->getStatusCode()), $response->getStatusCode());
+            throw new TransportException(
+                sprintf('Smsaero.ru problem. Status code is %s', $response->getStatusCode()),
+                $response->getStatusCode()
+            );
         }
     }
 
@@ -61,6 +81,6 @@ class ClientGuzzle implements IClient
      */
     private function getUrl(string $path): string
     {
-        return (is_string($path)) ? self::URL . $path : '';
+        return self::URL . $path;
     }
 }
