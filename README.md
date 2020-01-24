@@ -48,3 +48,49 @@ try {
 }
 
 ```
+
+### Настройка guzzle адаптера
+
+```php
+use Feech\SmsAero\Auth\Auth;
+use Feech\SmsAero\Client\ClientGuzzle;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+
+// configure required handler, middleware:
+$handlerStack = HandlerStack::create();
+
+$guzzleClient = new Client([
+    'connect_timeout' => 5,
+    'timeout' => 5,
+    'handler' => $handlerStack,
+]);
+
+$auth = new Auth('email', 'pass');
+$client = new ClientGuzzle($auth, $guzzleClient);
+```
+
+
+### Десериализация ответов в DTO
+
+Для работы с ответами сервиса через DTO используется jms/serializer и отдельный класс клиента SmsAeroClient.
+
+```php
+use Feech\SmsAero\Auth\Auth;
+use Feech\SmsAero\Client\ClientGuzzle;
+use Feech\SmsAero\Sms\Sms;
+use Feech\SmsAero\SmsAeroClient;
+use JMS\Serializer\SerializerBuilder;
+
+$auth = new Auth('email', 'pass');
+$client = new ClientGuzzle($auth);
+$serializer = SerializerBuilder::create()->build();
+
+$smsAero = new SmsAeroClient($client, $serializer);
+
+$sms = Sms::toSingleNumber('79591234567', 'Тестовое сообщение', Sms::CHANNEL_TYPE_INTERNATIONAL);
+
+$result = $smsAero->send($sms);
+var_dump($result->data->status);
+var_dump($result->data->cost);
+```
