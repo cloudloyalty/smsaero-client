@@ -48,7 +48,7 @@ final class ClientGuzzleTest extends TestCase
     public function testRequestWhenHappyPath(): void
     {
         $calledSend = false;
-        $successResponse = StubData::testsendSuccessResponse();
+        $successResponse = StubData::sendToSingleNumberSuccessResponse();
 
         $this->mockHandler->append(function (Request $request, array $options) use (
             &$calledSend,
@@ -134,7 +134,9 @@ final class ClientGuzzleTest extends TestCase
     public function testWhenErrorShouldThrowExceptionNoMatterOfGuzzleOptions(
         array $guzzleOptions
     ): void {
-        $this->mockHandler->append(new Response(401, [], StubData::authErrorResponse()));
+        $this->mockHandler->append(
+            new Response(401, [], StubData::authErrorResponse())
+        );
 
         $guzzleClient = new Client(array_merge(
             $guzzleOptions,

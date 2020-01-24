@@ -1,19 +1,20 @@
 <?php
 
-namespace Feech\SmsAero\Sms;
+declare(strict_types=1);
 
+namespace Feech\SmsAero\Sms;
 
 interface ISms
 {
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNumber(): string;
+    public function getNumber(): ?string;
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getListNumbers(): array;
+    public function getListNumbers(): ?array;
 
     /**
      * @return string

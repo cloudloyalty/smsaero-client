@@ -28,29 +28,29 @@ JSON;
 JSON;
     }
 
-    public static function testsendSuccessResponse(): string
+    public static function sendToSingleNumberSuccessResponse(): string
     {
         return <<<JSON
 {
     "success": true,
     "data": {
-        "id": 92756,
+        "id": 5,
         "from": "BIZNES",
         "number": "79990000000",
         "text": "Test text",
-        "status": 1,
-        "extendStatus": "delivery",
+        "status": 0,
+        "extendStatus": "queue",
         "channel": "DIRECT",
-        "cost": 1.93,
-        "dateCreate": 1579266291,
-        "dateSend": 1579266291
+        "cost": 2.2,
+        "dateCreate": 1532342510,
+        "dateSend": 1532342510
     },
     "message": null
 }
 JSON;
     }
 
-    public static function testsendErrorResponse(): string
+    public static function sendToSingleNumberErrorResponse(): string
     {
         return <<<JSON
 {
@@ -59,6 +59,30 @@ JSON;
         "number": ["incorrect"]
     },
     "message": "Validation error."
+}
+JSON;
+    }
+
+    public static function sendToMultipleNumbersSuccessResponse(): string
+    {
+        return <<<JSON
+{
+    "success": true,
+    "data": [
+        {
+            "id": 5,
+            "from": "BIZNES",
+            "number": "79990000000",
+            "text": "Test text",
+            "status": 0,
+            "extendStatus": "queue",
+            "channel": "DIRECT",
+            "cost": 2.2,
+            "dateCreate": 1532342510,
+            "dateSend": 1532342510
+        }
+    ],
+    "message": null
 }
 JSON;
     }

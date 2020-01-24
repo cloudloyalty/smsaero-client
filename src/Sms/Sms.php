@@ -1,16 +1,17 @@
 <?php
 
-namespace Feech\SmsAero\Sms;
+declare(strict_types=1);
 
+namespace Feech\SmsAero\Sms;
 
 class Sms implements ISms
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $number;
     /**
-     * @var array
+     * @var array|null
      */
     private $listNumbers;
     /**
@@ -60,18 +61,28 @@ class Sms implements ISms
         }
     }
 
+    public static function toSingleNumber(string $number, string $text, string $channel): self
+    {
+        return new self($number, $text, $channel);
+    }
+
+    public static function toMultipleNumbers(array $numbers, string $text, string $channel): self
+    {
+        return new self($numbers, $text, $channel);
+    }
+
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNumber(): string
+    public function getNumber(): ?string
     {
         return $this->number;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getListNumbers(): array
+    public function getListNumbers(): ?array
     {
         return $this->listNumbers;
     }

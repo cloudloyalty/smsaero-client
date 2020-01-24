@@ -1,37 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Feech\SmsAero;
 
-use Feech\SmsAero\Client\IClient;
+use Feech\SmsAero\Exception\BadResponseException;
 use Feech\SmsAero\Exception\BaseSmsAeroException;
+use Feech\SmsAero\Client\IClient;
 use Feech\SmsAero\Sms\ISms;
+use JMS\Serializer\Exception\RuntimeException;
+use JMS\Serializer\SerializerInterface;
 
-class SmsAero
+class SmsAeroClient
 {
-    /**
-     * @var IClient
-     */
-    private $client;
+    /** @var SmsAero */
+    private $rawJsonClient;
 
-    /**
-     * SmsAero constructor.
-     *
-     * @param IClient $client
-     */
-    public function __construct(IClient $client)
+    /** @var SerializerInterface */
+    private $serializer;
+
+    public function __construct(IClient $client, SerializerInterface $serializer)
     {
-        $this->client = $client;
+        $this->rawJsonClient = new SmsAero($client);
+        $this->serializer = $serializer;
     }
 
     /**
      * Тестовый метод, для проверки авторизации пользователя
      *
-     * @return string
+     * @return Dto\AuthResponse
      * @throws BaseSmsAeroException
      */
-    public function auth(): string
+    public function auth(): Dto\AuthResponse
     {
-        return $this->client->request('/auth');
+        try {
+            $jsonResponse = $this->rawJsonClient->auth();
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\AuthResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\AuthResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
     }
 
     /**
@@ -40,10 +55,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function cards(): string
-    {
-        return $this->client->request('/cards');
-    }
+    //public function cards(): string
 
     /**
      * Пополнение баланса
@@ -54,13 +66,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function addBalance(int $sum, int $cardId): string
-    {
-        return $this->client->request('/balance/add', [
-            'sum'    => $sum,
-            'cardId' => $cardId
-        ]);
-    }
+    //public function addBalance(int $sum, int $cardId): string
 
     /**
      * Отправка сообщения
@@ -71,59 +77,30 @@ class SmsAero
      * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
      * (в ответ система ждет статус 200)
      *
-     * @return string
+     * @return Dto\SendSingleMessageResponse
      * @throws BaseSmsAeroException
      * @throws \InvalidArgumentException
      */
-    public function send(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
-    {
-        $number = $sms->getNumber();
-        if ($number === null) {
-            throw new \InvalidArgumentException(
-                'testSend method supports only message to single number'
+    public function send(
+        ISms $sms,
+        string $sign = '',
+        int $dateSend = null,
+        string $callbackUrl = null
+    ): Dto\SendSingleMessageResponse {
+        try {
+            $jsonResponse = $this->rawJsonClient->send($sms, $sign, $dateSend, $callbackUrl);
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\SendSingleMessageResponse::class,
+                'json'
             );
+            assert($result instanceof Dto\SendSingleMessageResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
         }
 
-        return $this->client->request('/sms/send', [
-            'number'      => $number,
-            'text'        => $sms->getText(),
-            'channel'     => $sms->getChannel(),
-            'sign'        => $sign,
-            'dateSend'    => $dateSend,
-            'callbackUrl' => $callbackUrl
-        ]);
-    }
-
-    /**
-     * Отправка ТЕСТОВОГО сообщения
-     *
-     * @param ISms        $sms
-     * @param string      $sign
-     * @param int|null    $dateSend Дата для отложенной отправки сообщения (в формате unixtime)
-     * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
-     * (в ответ система ждет статус 200)
-     *
-     * @return string
-     * @throws BaseSmsAeroException
-     * @throws \InvalidArgumentException
-     */
-    public function testSend(ISms $sms, string $sign = 'SMS Aero', int $dateSend = null, string $callbackUrl = null): string
-    {
-        $number = $sms->getNumber();
-        if ($number === null) {
-            throw new \InvalidArgumentException(
-                'testSend method supports only message to single number'
-            );
-        }
-
-        return $this->client->request('/sms/testsend', [
-            'number'      => $number,
-            'text'        => $sms->getText(),
-            'channel'     => $sms->getChannel(),
-            'sign'        => $sign,
-            'dateSend'    => $dateSend,
-            'callbackUrl' => $callbackUrl
-        ]);
+        return $result;
     }
 
     /**
@@ -135,27 +112,65 @@ class SmsAero
      * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
      * (в ответ система ждет статус 200)
      *
-     * @return string
+     * @return Dto\SendBulkMessageResponse
      * @throws BaseSmsAeroException
      * @throws \InvalidArgumentException
      */
-    public function bulkSend(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
-    {
-        $numbers = $sms->getListNumbers();
-        if ($numbers === null) {
-            throw new \InvalidArgumentException(
-                'bulkSend method supports only message to multiple numbers'
+    public function bulkSend(
+        ISms $sms,
+        string $sign = '',
+        int $dateSend = null,
+        string $callbackUrl = null
+    ): Dto\SendBulkMessageResponse {
+        try {
+            $jsonResponse = $this->rawJsonClient->bulkSend($sms, $sign, $dateSend, $callbackUrl);
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\SendBulkMessageResponse::class,
+                'json'
             );
+            assert($result instanceof Dto\SendBulkMessageResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
         }
 
-        return $this->client->request('/sms/send', [
-            'numbers'     => $numbers,
-            'text'        => $sms->getText(),
-            'channel'     => $sms->getChannel(),
-            'sign'        => $sign,
-            'dateSend'    => $dateSend,
-            'callbackUrl' => $callbackUrl
-        ]);
+        return $result;
+    }
+
+    /**
+     * Отправка ТЕСТОВОГО сообщения
+     *
+     * @param ISms        $sms
+     * @param string      $sign
+     * @param int|null    $dateSend Дата для отложенной отправки сообщения (в формате unixtime)
+     * @param string|null $callbackUrl url для отправки статуса сообщения в формате http(s)://your.site
+     * (в ответ система ждет статус 200)
+     *
+     * @return Dto\SendSingleMessageResponse
+     * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
+     */
+    public function testSend(
+        ISms $sms,
+        string $sign = 'SMS Aero',
+        int $dateSend = null,
+        string $callbackUrl = null
+    ): Dto\SendSingleMessageResponse {
+        try {
+            $jsonResponse = $this->rawJsonClient->testSend($sms, $sign, $dateSend, $callbackUrl);
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\SendSingleMessageResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\SendSingleMessageResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
     }
 
     /**
@@ -166,12 +181,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function checkSend(int $id): string
-    {
-        return $this->client->request('/sms/status', [
-            'id' => $id
-        ]);
-    }
+    //public function checkSend(int $id): string
 
     /**
      * Получение списка отправленных sms сообщений
@@ -183,14 +193,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function smsList(string $number = null, string $text = null, int $page = 1): string
-    {
-        return $this->client->request('/sms/list', [
-            'page'   => $page,
-            'number' => $number,
-            'text'   => $text
-        ]);
-    }
+    //public function smsList(string $number = null, string $text = null, int $page = 1): string
 
     /**
      * Получение ТЕСТОВОГО списка отправленных sms сообщений
@@ -202,14 +205,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function testSmsList(string $number = null, string $text = null, int $page = 1): string
-    {
-        return $this->client->request('/sms/testlist', [
-            'page'   => $page,
-            'number' => $number,
-            'text'   => $text
-        ]);
-    }
+    //public function testSmsList(string $number = null, string $text = null, int $page = 1): string
 
     /**
      * Запрос баланса
@@ -217,10 +213,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function balance(): string
-    {
-        return $this->client->request('/balance');
-    }
+    //public function balance(): string
 
     /**
      * Запрос тарифа
@@ -228,10 +221,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function tariffs(): string
-    {
-        return $this->client->request('/tariffs');
-    }
+    //public function tariffs(): string
 
     /**
      * Добавление в чёрный список
@@ -241,12 +231,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function blacklistAdd(string $number): string
-    {
-        return $this->client->request('/blacklist/add', [
-            'number' => $number
-        ]);
-    }
+    //public function blacklistAdd(string $number): string
 
     /**
      * Удаление из черного списка
@@ -256,12 +241,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function blacklistDelete($id): string
-    {
-        return $this->client->request('/blacklist/delete', [
-            'id' => $id
-        ]);
-    }
+    //public function blacklistDelete($id): string
 
     /**
      * Список контактов в черном списке
@@ -272,13 +252,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function blacklistList(string $number = null, int $page = 1): string
-    {
-        return $this->client->request('/blacklist/list', [
-            'page'   => $page,
-            'number' => $number
-        ]);
-    }
+    //public function blacklistList(string $number = null, int $page = 1): string
 
     /**
      * Определение оператора
@@ -288,10 +262,5 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function operatorNumber(string $number): string
-    {
-        return $this->client->request('/number/operator', [
-            'number' => $number
-        ]);
-    }
+    //public function operatorNumber(string $number): string
 }
