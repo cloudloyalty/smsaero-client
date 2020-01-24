@@ -9,7 +9,7 @@ use Feech\SmsAero\Exception\BaseSmsAeroException;
 use Feech\SmsAero\Exception\TransportException;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\TransferException;
 
 class ClientGuzzle implements IClient
 {
@@ -60,7 +60,7 @@ class ClientGuzzle implements IClient
                     'http_errors' => true,
                 ]
             );
-        } catch (GuzzleException $e) {
+        } catch (TransferException $e) {
             throw TransportException::fromGuzzleException($e);
         }
 

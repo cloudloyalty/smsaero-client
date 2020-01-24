@@ -1,5 +1,8 @@
 SMS Aero V2
 ===========
+
+![](https://github.com/ifeech/smsaero-v2/workflows/test/badge.svg)
+
 Реализует Api v2 для работы с сервисом SMS Aero.
 
 Зависимости

@@ -10,7 +10,7 @@ class BaseResponse
 {
     /**
      * @var boolean
-     * @JMS\Type("bool")
+     * @JMS\Type("boolean")
      */
     public $success;
 
