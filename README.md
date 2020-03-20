@@ -1,9 +1,9 @@
 SMS Aero V2
 ===========
 
-![](https://github.com/ifeech/smsaero-v2/workflows/test/badge.svg)
+![](https://github.com/cloudloyalty/smsaero-v2/workflows/test/badge.svg)
 
-Реализует Api v2 для работы с сервисом SMS Aero.
+Библиотека для подключения к API сервиса SMS Aero.
 
 Зависимости
 ------------
@@ -17,7 +17,7 @@ SMS Aero V2
 ------------
 
 ```bash
-$ php composer.phar require ifeech/smsaero-v2
+$ php composer.phar require cloudloyalty/smsaero-client
 ```
 
 Пример работы
