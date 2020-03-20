@@ -1,6 +1,6 @@
 {
-  "name": "ifeech/smsaero-v2",
-  "description": "The library implement SMS Aero api v2",
+  "name": "cloudloyalty/smsaero-client",
+  "description": "Client library for smsaero.ru API",
   "type": "library",
   "keywords": [
     "sms",
@@ -13,6 +13,10 @@
     {
       "name": "Feech",
       "email": "s.feech@gmail.com"
+    },
+    {
+      "name": "CloudLoyalty Dev Team",
+      "email": "support@cloudloyalty.ru"
     }
   ],
   "require": {
