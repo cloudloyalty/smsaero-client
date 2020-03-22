@@ -1,0 +1,63 @@
+name: test
+
+on:
+  push:
+    branches:
+    tags:
+  pull_request:
+
+env:
+  DEFAULT_COMPOSER_FLAGS: "--prefer-dist --no-interaction --no-ansi --no-progress --no-suggest"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [7.2, 7.3, 7.4]
+        os: [ubuntu-latest]
+        env: ['low', 'high']
+    name: PHP ${{ matrix.php }} Test ${{ matrix.env }} on ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install PHP
+      uses: shivammathur/setup-php@1.7.0
+      with:
+        php-version: ${{ matrix.php }}
+        extensions: json, mbstring
+        ini-values: zend.assertions=1, assert.exception=1, error_reporting=E_ALL
+        coverage: none
+
+    - name: Validate composer.json
+      run: composer validate
+
+    - name: Get composer cache directory
+      id: composer-cache
+      run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+    - name: Cache dependencies
+      uses: actions/cache@v1.0.3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Composer update
+      run: |
+        if [ "$DEPENDENCIES" = 'high' ]; then
+            composer update $DEFAULT_COMPOSER_FLAGS
+        fi;
+        if [ "$DEPENDENCIES" = 'low' ]; then
+            composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest
+        fi;
+      env:
+        DEPENDENCIES: ${{ matrix.env }}
+
+    - name: Run phpunit
+      run: ./vendor/bin/phpunit
+
+    - name: Run phpstan
+      run: ./vendor/bin/phpstan analyse
