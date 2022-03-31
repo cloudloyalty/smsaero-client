@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.2, 7.3, 7.4]
+        php: [7.2, 7.3, 7.4, 8.0, 8.1]
         os: [ubuntu-latest]
         env: ['low', 'high']
     name: PHP ${{ matrix.php }} Test ${{ matrix.env }} on ${{ matrix.os }}
@@ -24,7 +24,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install PHP
-      uses: shivammathur/setup-php@1.7.0
+      uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php }}
         extensions: json, mbstring
@@ -39,11 +39,11 @@ jobs:
       run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
     - name: Cache dependencies
-      uses: actions/cache@v1.0.3
+      uses: actions/cache@v2
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-        restore-keys: ${{ runner.os }}-composer-
+        key: ${{ runner.os }}-composer-${{ matrix.env }}-${{ hashFiles('**/composer.json') }}
+        restore-keys: ${{ runner.os }}-composer-${{ matrix.env }}-
 
     - name: Composer update
       run: |
@@ -52,9 +52,13 @@ jobs:
         fi;
         if [ "$DEPENDENCIES" = 'low' ]; then
             composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest
+            if [ "$PHP_VERSION" = '8' ] || [ "$PHP_VERSION" = '8.1' ]; then
+                composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest --with-all-dependencies jms/serializer:^3.14
+            fi;
         fi;
       env:
         DEPENDENCIES: ${{ matrix.env }}
+        PHP_VERSION: ${{ matrix.php }}
 
     - name: Run phpunit
       run: ./vendor/bin/phpunit
