@@ -210,10 +210,27 @@ class SmsAeroClient
     /**
      * Запрос баланса
      *
-     * @return string
+     * @return Dto\BalanceResponse
      * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
      */
-    //public function balance(): string
+    public function balance(): Dto\BalanceResponse
+    {
+        try {
+            $jsonResponse = $this->rawJsonClient->balance();
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\BalanceResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\BalanceResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
 
     /**
      * Запрос тарифа

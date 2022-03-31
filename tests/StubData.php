@@ -86,4 +86,17 @@ JSON;
 }
 JSON;
     }
+
+    public static function balanceSuccessResponse(): string
+    {
+        return <<<JSON
+{
+    "success": true,
+    "data": {
+        "balance": 1389.26
+    },
+    "message": null
+}
+JSON;
+    }
 }
