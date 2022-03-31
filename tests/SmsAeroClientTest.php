@@ -276,4 +276,46 @@ final class SmsAeroClientTest extends TestCase
 
         $this->client->balance();
     }
+
+    public function testFlashCallWhenSuccess(): void
+    {
+        $this->mockHandler->append(function (Request $request, array $options) {
+            $this->assertStringContainsString(
+                '/v2/flashcall/send',
+                (string) $request->getUri()
+            );
+
+            return new Response(200, [], StubData::flashCallSendSuccessResponse());
+        });
+
+        $result = $this->client->flashCall('79990000000', '1234');
+
+        $this->assertTrue($result->success);
+        $this->assertNull($result->message);
+
+        $this->assertInstanceOf(Dto\FlashCallStatus::class, $result->data);
+        $this->assertFlashCallStatusToTestData($result->data);
+    }
+
+    private function assertFlashCallStatusToTestData(Dto\FlashCallStatus $result): void
+    {
+        $this->assertSame(1, $result->id);
+        $this->assertSame(0, $result->status);
+        $this->assertSame('1234', $result->code);
+        $this->assertSame('79990000000', $result->phone);
+        $this->assertSame(0.59, $result->cost);
+        $this->assertSame(1646926190, $result->timeCreate);
+        $this->assertSame(1646926190, $result->timeUpdate);
+    }
+
+    public function testFlashCallWhenUnknownResponseShouldThrowException(): void
+    {
+        $this->mockHandler->append(
+            new Response(200, [], '')
+        );
+
+        $this->expectException(BadResponseException::class);
+
+        $this->client->flashCall('79990000000', '1234');
+    }
 }
