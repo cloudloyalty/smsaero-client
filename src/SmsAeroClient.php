@@ -13,6 +13,9 @@ use JMS\Serializer\SerializerInterface;
 
 class SmsAeroClient
 {
+    /** @var IClient */
+    private $client;
+
     /** @var SmsAero */
     private $rawJsonClient;
 
@@ -21,6 +24,7 @@ class SmsAeroClient
 
     public function __construct(IClient $client, SerializerInterface $serializer)
     {
+        $this->client = $client;
         $this->rawJsonClient = new SmsAero($client);
         $this->serializer = $serializer;
     }
@@ -210,10 +214,27 @@ class SmsAeroClient
     /**
      * Запрос баланса
      *
-     * @return string
+     * @return Dto\BalanceResponse
      * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
      */
-    //public function balance(): string
+    public function balance(): Dto\BalanceResponse
+    {
+        try {
+            $jsonResponse = $this->rawJsonClient->balance();
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\BalanceResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\BalanceResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
 
     /**
      * Запрос тарифа
@@ -263,4 +284,33 @@ class SmsAeroClient
      * @throws BaseSmsAeroException
      */
     //public function operatorNumber(string $number): string
+
+    /**
+     * @param string $number
+     * @param string $code
+     *
+     * @return Dto\FlashCallResponse
+     * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
+     */
+    public function flashCall(string $number, string $code): Dto\FlashCallResponse
+    {
+        try {
+            $jsonResponse = $this->client->request('/flashcall/send', [
+                'phone' => $number,
+                'code'  => $code,
+            ]);
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\FlashCallResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\FlashCallResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
 }
