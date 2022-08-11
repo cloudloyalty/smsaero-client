@@ -318,4 +318,119 @@ final class SmsAeroClientTest extends TestCase
 
         $this->client->flashCall('79990000000', '1234');
     }
+
+    public function testViberSendWhenSuccess(): void
+    {
+        $this->mockHandler->append(function (Request $request, array $options) {
+            $this->assertStringContainsString(
+                '/v2/viber/send',
+                (string) $request->getUri()
+            );
+
+            $body = (string) $request->getBody();
+            $this->assertNotEmpty($body);
+            $params = [];
+            parse_str($body, $params);
+            $this->assertEquals(
+                [
+                    'number' => '79990000000',
+                    'sign' => 'Hello!',
+                    'channel' => 'OFFICIAL',
+                    'text' => 'your text',
+                ],
+                $params
+            );
+
+            return new Response(200, [], StubData::viberSendSuccessResponse());
+        });
+
+        $request = Dto\ViberSendRequest::toSingleNumber(
+            '79990000000',
+            'Hello!',
+            Dto\ViberSendRequest::CHANNEL_OFFICIAL,
+            'your text'
+        );
+        $result = $this->client->viberSend($request);
+
+        $this->assertTrue($result->success);
+        $this->assertNull($result->message);
+
+        $this->assertInstanceOf(Dto\ViberStatus::class, $result->data);
+        $this->assertSame(1, $result->data->id);
+        $this->assertSame(1511153253, $result->data->dateCreate);
+        $this->assertSame(1511153253, $result->data->dateSend);
+        $this->assertSame(3, $result->data->count);
+        $this->assertSame('Hello!', $result->data->sign);
+        $this->assertSame('OFFICIAL', $result->data->channel);
+        $this->assertSame('your text', $result->data->text);
+        $this->assertSame(2.25, $result->data->cost);
+        $this->assertSame(1, $result->data->status);
+        $this->assertSame('moderation', $result->data->extendStatus);
+        $this->assertSame(0, $result->data->countSend);
+        $this->assertSame(0, $result->data->countDelivered);
+        $this->assertSame(0, $result->data->countWrite);
+        $this->assertSame(0, $result->data->countUndelivered);
+        $this->assertSame(0, $result->data->countError);
+    }
+
+    public function testViberSendWhenUnknownResponseShouldThrowException(): void
+    {
+        $this->mockHandler->append(
+            new Response(200, [], '')
+        );
+
+        $this->expectException(BadResponseException::class);
+
+        $request = Dto\ViberSendRequest::toSingleNumber(
+            '79990000000',
+            'Hello!',
+            Dto\ViberSendRequest::CHANNEL_OFFICIAL,
+            'your text'
+        );
+        $this->client->viberSend($request);
+    }
+
+    public function testViberStatisticWhenSuccess(): void
+    {
+        $this->mockHandler->append(function (Request $request, array $options) {
+            $this->assertStringContainsString(
+                '/v2/viber/statistic',
+                (string) $request->getUri()
+            );
+
+            return new Response(200, [], StubData::viberStatisticSuccessResponse());
+        });
+
+        $result = $this->client->viberStatistic(1);
+
+        $this->assertTrue($result->success);
+        $this->assertNull($result->message);
+
+        $this->assertIsArray($result->data);
+        $this->assertCount(3, $result->data);
+        foreach ($result->data as $numberData) {
+            $this->assertInstanceOf(Dto\ViberNumberStatus::class, $numberData);
+        }
+
+        $this->assertSame('79990000000', $result->data[0]->number);
+        $this->assertSame(0, $result->data[0]->status);
+        $this->assertSame('send', $result->data[0]->extendStatus);
+        $this->assertSame(1511153341, $result->data[0]->dateSend);
+
+        $this->assertSame('79990000001', $result->data[1]->number);
+        $this->assertSame(2, $result->data[1]->status);
+        $this->assertSame('write', $result->data[1]->extendStatus);
+        $this->assertSame(1511153341, $result->data[1]->dateSend);
+    }
+
+    public function testViberStatisticWhenUnknownResponseShouldThrowException(): void
+    {
+        $this->mockHandler->append(
+            new Response(200, [], '')
+        );
+
+        $this->expectException(BadResponseException::class);
+
+        $this->client->viberStatistic(1);
+    }
 }

@@ -12,4 +12,9 @@ class BadResponseException extends BaseSmsAeroException
     {
         return new self('Unknown response: ' . $e->getMessage(), 0, $e);
     }
+
+    public static function becauseOfJsonError(): self
+    {
+        return new self('Invalid or malformed json response');
+    }
 }
