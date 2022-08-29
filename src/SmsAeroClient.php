@@ -313,4 +313,65 @@ class SmsAeroClient
 
         return $result;
     }
+
+    /**
+     * @param Dto\ViberSendRequest $request
+     *
+     * @return Dto\ViberSendResponse
+     * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
+     */
+    public function viberSend(Dto\ViberSendRequest $request): Dto\ViberSendResponse
+    {
+        try {
+            $jsonResponse = $this->client->request('/viber/send', $request->toArray());
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\ViberSendResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\ViberSendResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $sendingId
+     * @param int|null $page
+     *
+     * @return Dto\ViberStatisticResponse
+     * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
+     */
+    public function viberStatistic(int $sendingId, ?int $page = null): Dto\ViberStatisticResponse
+    {
+        try {
+            $request = ['sendingId' => $sendingId];
+            if ($page !== null) {
+                $request['page'] = $page;
+            }
+            $jsonResponse = $this->client->request('/viber/statistic', $request);
+
+            $arr = json_decode($jsonResponse, true);
+            if (!is_array($arr)) {
+                throw BadResponseException::becauseOfJsonError();
+            }
+            unset($arr['data']['links']);
+
+            $result = $this->serializer->deserialize(
+                (string) json_encode($arr),
+                Dto\ViberStatisticResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\ViberStatisticResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
 }

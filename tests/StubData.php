@@ -118,4 +118,64 @@ JSON;
 }
 JSON;
     }
+
+    public static function viberSendSuccessResponse(): string
+    {
+        return <<<JSON
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "dateCreate": 1511153253,
+        "dateSend": 1511153253,
+        "count": 3,
+        "sign": "Hello!",
+        "channel": "OFFICIAL",
+        "text": "your text",
+        "cost": 2.25,
+        "status": 1,
+        "extendStatus": "moderation",
+        "countSend": 0,
+        "countDelivered": 0,
+        "countWrite": 0,
+        "countUndelivered": 0,
+        "countError": 0
+    },
+    "message": null
+}
+JSON;
+    }
+
+    public static function viberStatisticSuccessResponse(): string
+    {
+        return <<<JSON
+{
+    "success": true,
+    "data": {
+        "0": {
+            "number": "79990000000",
+            "status": 0,
+            "extendStatus": "send",
+            "dateSend": 1511153341
+        },
+        "1": {
+            "number": "79990000001",
+            "status": 2,
+            "extendStatus": "write",
+            "dateSend": 1511153341
+        },
+        "2": {
+            "number": "79990000003",
+            "status": 2,
+            "extendStatus": "write",
+            "dateSend": 1511153341
+        },
+        "links": {
+            "self": "/v2/viber/statistic?sendingId=1&page=1"
+        }
+    },
+    "message": null
+}
+JSON;
+    }
 }

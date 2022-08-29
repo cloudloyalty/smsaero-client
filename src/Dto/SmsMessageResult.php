@@ -8,6 +8,14 @@ use JMS\Serializer\Annotation as JMS;
 
 class SmsMessageResult
 {
+    public const STATUS_QUEUED         = 0; // в очереди
+    public const STATUS_DELIVERED      = 1; // доставлено
+    public const STATUS_NOT_DELIVERED  = 2; // не доставлено
+    public const STATUS_SENT           = 3; // передано
+    public const STATUS_WAITING_STATUS = 4; // ожидание статуса сообщения
+    public const STATUS_REJECTED       = 6; // сообщение отклонено
+    public const STATUS_ON_MODERATION  = 8; // на модерации
+
     /**
      * @var int
      * @JMS\Type("int")
