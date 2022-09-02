@@ -63,6 +63,11 @@ class ViberSendRequest
     /**
      * @var string|null
      */
+    private $callbackUrl;
+
+    /**
+     * @var string|null
+     */
     private $signSms;
 
     /**
@@ -158,6 +163,7 @@ class ViberSendRequest
             'textButton' => $this->textButton,
             'linkButton' => $this->linkButton,
             'dateSend' => $this->dateSend,
+            'callbackUrl' => $this->callbackUrl,
             'signSms' => $this->signSms,
             'textSms' => $this->textSms,
             'priceSms' => $this->priceSms,
@@ -205,6 +211,13 @@ class ViberSendRequest
         } else {
             $this->dateSend = $dateSend->getTimestamp();
         }
+
+        return $this;
+    }
+
+    public function setCallbackUrl(?string $callbackUrl): self
+    {
+        $this->callbackUrl = $callbackUrl;
 
         return $this;
     }
