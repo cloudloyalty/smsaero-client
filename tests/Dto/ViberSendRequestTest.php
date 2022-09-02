@@ -16,6 +16,7 @@ final class ViberSendRequestTest extends TestCase
             ->setTextButton('see more')
             ->setLinkButton('https://your.site')
             ->setDateSend(new \DateTime('2022-08-11 12:00:00', new \DateTimeZone('Europe/Moscow')))
+            ->setCallbackUrl('https://your.site/webhook?key=value')
             ->setSignSms('SMS Aero')
             ->setTextSms('sms message')
             ->setPriceSms(10)
@@ -32,6 +33,7 @@ final class ViberSendRequestTest extends TestCase
                 'textButton' => 'see more',
                 'linkButton' => 'https://your.site',
                 'dateSend' => 1660208400,
+                'callbackUrl' => 'https://your.site/webhook?key=value',
                 'signSms' => 'SMS Aero',
                 'textSms' => 'sms message',
                 'priceSms' => 10,
