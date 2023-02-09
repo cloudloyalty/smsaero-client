@@ -315,6 +315,35 @@ class SmsAeroClient
     }
 
     /**
+     * @param string $number
+     * @param string $code
+     *
+     * @return Dto\VoiceCallResponse
+     * @throws BaseSmsAeroException
+     * @throws \InvalidArgumentException
+     */
+    public function voiceCall(string $number, string $code): Dto\VoiceCallResponse
+    {
+        try {
+            $jsonResponse = $this->client->request('/voicecode/send', [
+                'phone' => $number,
+                'code'  => $code,
+            ]);
+
+            $result = $this->serializer->deserialize(
+                $jsonResponse,
+                Dto\VoiceCallResponse::class,
+                'json'
+            );
+            assert($result instanceof Dto\VoiceCallResponse);
+        } catch (RuntimeException $e) {
+            throw BadResponseException::becauseOfDeserializationError($e);
+        }
+
+        return $result;
+    }
+
+    /**
      * @param Dto\ViberSendRequest $request
      *
      * @return Dto\ViberSendResponse
