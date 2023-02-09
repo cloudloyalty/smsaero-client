@@ -319,6 +319,48 @@ final class SmsAeroClientTest extends TestCase
         $this->client->flashCall('79990000000', '1234');
     }
 
+    public function testVoiceCallWhenSuccess(): void
+    {
+        $this->mockHandler->append(function (Request $request, array $options) {
+            $this->assertStringContainsString(
+                '/v2/voicecode/send',
+                (string) $request->getUri()
+            );
+
+            return new Response(200, [], StubData::voiceCallSendSuccessResponse());
+        });
+
+        $result = $this->client->voiceCall('79990000000', '1234');
+
+        $this->assertTrue($result->success);
+        $this->assertNull($result->message);
+
+        $this->assertInstanceOf(Dto\VoiceCallStatus::class, $result->data);
+        $this->assertVoiceCallStatusToTestData($result->data);
+    }
+
+    private function assertVoiceCallStatusToTestData(Dto\VoiceCallStatus $result): void
+    {
+        $this->assertSame(1, $result->id);
+        $this->assertSame(0, $result->status);
+        $this->assertSame('1234', $result->code);
+        $this->assertSame('79990000000', $result->phone);
+        $this->assertSame(0.59, $result->cost);
+        $this->assertSame(1646926190, $result->timeCreate);
+        $this->assertSame(1646926190, $result->timeUpdate);
+    }
+
+    public function testVoiceCallWhenUnknownResponseShouldThrowException(): void
+    {
+        $this->mockHandler->append(
+            new Response(200, [], '')
+        );
+
+        $this->expectException(BadResponseException::class);
+
+        $this->client->voiceCall('79990000000', '1234');
+    }
+
     public function testViberSendWhenSuccess(): void
     {
         $this->mockHandler->append(function (Request $request, array $options) {

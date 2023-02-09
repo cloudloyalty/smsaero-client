@@ -119,6 +119,25 @@ JSON;
 JSON;
     }
 
+    public static function voiceCallSendSuccessResponse(): string
+    {
+        return <<<JSON
+{
+    "success": true,
+    "data": {
+        "id": 1,
+        "status": 0,
+        "code": "1234",
+        "phone": "79990000000",
+        "cost": "0.59",
+        "timeCreate": 1646926190,
+        "timeUpdate": 1646926190
+    },
+    "message": null
+}
+JSON;
+    }
+
     public static function viberSendSuccessResponse(): string
     {
         return <<<JSON
