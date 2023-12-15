@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [7.2, 7.3, 7.4, 8.0, 8.1]
+        php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
         os: [ubuntu-latest]
         env: ['low', 'high']
     name: PHP ${{ matrix.php }} Test ${{ matrix.env }} on ${{ matrix.os }}
@@ -52,7 +52,7 @@ jobs:
         fi;
         if [ "$DEPENDENCIES" = 'low' ]; then
             composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest
-            if [ "$PHP_VERSION" = '8' ] || [ "$PHP_VERSION" = '8.1' ]; then
+            if [ "$PHP_VERSION" = '8' ] || [ "$PHP_VERSION" = '8.1' ] || [ "$PHP_VERSION" = '8.2' ] || [ "$PHP_VERSION" = '8.3' ]; then
                 composer update $DEFAULT_COMPOSER_FLAGS --prefer-lowest --with-all-dependencies jms/serializer:^3.14
             fi;
         fi;
