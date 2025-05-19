@@ -114,7 +114,7 @@ class Sms implements ISms
     /**
      * @return string
      */
-    public function getMarker(): string
+    public function getMarker(): ?string
     {
         return $this->marker;
     }

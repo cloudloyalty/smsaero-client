@@ -29,5 +29,5 @@ interface ISms
     /**
      * @return string
      */
-    public function getMarker(): string;
+    public function getMarker(): ?string;
 }
