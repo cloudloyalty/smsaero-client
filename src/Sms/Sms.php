@@ -22,6 +22,10 @@ class Sms implements ISms
      * @var string
      */
     private $channel;
+    /**
+     * @var string
+     */
+    private $marker;
 
     public const CHANNEL_TYPE_INFO = 'INFO';
     public const CHANNEL_TYPE_DIRECT = 'DIRECT';
@@ -44,7 +48,7 @@ class Sms implements ISms
      * @param string       $text
      * @param string       $channel
      */
-    public function __construct($number, string $text, string $channel)
+    public function __construct($number, string $text, string $channel, string $marker = null)
     {
         if (is_array($number)) {
             $this->listNumbers = $number;
@@ -59,16 +63,20 @@ class Sms implements ISms
         } else {
             $this->channel = 'INFO';
         }
+
+        if ($marker) {
+            $this->marker = $marker;
+        }
     }
 
-    public static function toSingleNumber(string $number, string $text, string $channel): self
+    public static function toSingleNumber(string $number, string $text, string $channel, string $marker = null): self
     {
-        return new self($number, $text, $channel);
+        return new self($number, $text, $channel, $marker);
     }
 
-    public static function toMultipleNumbers(array $numbers, string $text, string $channel): self
+    public static function toMultipleNumbers(array $numbers, string $text, string $channel, string $marker = null): self
     {
-        return new self($numbers, $text, $channel);
+        return new self($numbers, $text, $channel, $marker);
     }
 
     /**
@@ -101,5 +109,13 @@ class Sms implements ISms
     public function getChannel(): string
     {
         return $this->channel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMarker(): string
+    {
+        return $this->marker;
     }
 }
