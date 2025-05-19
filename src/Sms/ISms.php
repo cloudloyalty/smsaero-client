@@ -25,4 +25,9 @@ interface ISms
      * @return string
      */
     public function getChannel(): string;
+
+    /**
+     * @return string
+     */
+    public function getMarker(): string;
 }

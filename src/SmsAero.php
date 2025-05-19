@@ -88,6 +88,7 @@ class SmsAero
             'number'      => $number,
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
+            'marker'      => $sms->getMarker(),
             'sign'        => $sign,
             'dateSend'    => $dateSend,
             'callbackUrl' => $callbackUrl
@@ -120,6 +121,7 @@ class SmsAero
             'number'      => $number,
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
+            'marker'      => $sms->getMarker(),
             'sign'        => $sign,
             'dateSend'    => $dateSend,
             'callbackUrl' => $callbackUrl
@@ -152,6 +154,7 @@ class SmsAero
             'numbers'     => $numbers,
             'text'        => $sms->getText(),
             'channel'     => $sms->getChannel(),
+            'marker'      => $sms->getMarker(),
             'sign'        => $sign,
             'dateSend'    => $dateSend,
             'callbackUrl' => $callbackUrl
