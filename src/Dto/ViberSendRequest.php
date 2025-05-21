@@ -85,6 +85,11 @@ class ViberSendRequest
      */
     private $timeout;
 
+    /**
+     * @var string|null
+     */
+    private $marker;
+
     private function __construct()
     {
     }
@@ -93,13 +98,15 @@ class ViberSendRequest
         string $number,
         string $sign,
         string $channel,
-        string $text
+        string $text,
+        string $marker = null
     ): self {
         $request = new self();
         $request->number = $number;
         $request->sign = $sign;
         $request->channel = $channel;
         $request->text = $text;
+        $request->marker = $marker;
 
         return $request;
     }
@@ -114,7 +121,8 @@ class ViberSendRequest
         array $numbers,
         string $sign,
         string $channel,
-        string $text
+        string $text,
+        string $marker = null
     ): self {
         assert(count($numbers) > 0 && count($numbers) <= 50);
 
@@ -168,6 +176,7 @@ class ViberSendRequest
             'textSms' => $this->textSms,
             'priceSms' => $this->priceSms,
             'timeout' => $this->timeout,
+            'marker' => $this->marker,
         ];
 
         return array_filter(
