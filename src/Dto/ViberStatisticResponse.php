@@ -12,5 +12,6 @@ class ViberStatisticResponse extends BaseResponse
      * @var ViberNumberStatus[]
      * @JMS\Type("array<Feech\SmsAero\Dto\ViberNumberStatus>")
      */
+    #[JMS\Type('array<Feech\SmsAero\Dto\ViberNumberStatus>')]
     public $data;
 }

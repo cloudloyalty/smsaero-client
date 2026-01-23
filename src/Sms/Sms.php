@@ -48,7 +48,7 @@ class Sms implements ISms
      * @param string       $text
      * @param string       $channel
      */
-    public function __construct($number, string $text, string $channel, string $marker = null)
+    public function __construct($number, string $text, string $channel, ?string $marker = null)
     {
         if (is_array($number)) {
             $this->listNumbers = $number;
@@ -69,12 +69,12 @@ class Sms implements ISms
         }
     }
 
-    public static function toSingleNumber(string $number, string $text, string $channel, string $marker = null): self
+    public static function toSingleNumber(string $number, string $text, string $channel, ?string $marker = null): self
     {
         return new self($number, $text, $channel, $marker);
     }
 
-    public static function toMultipleNumbers(array $numbers, string $text, string $channel, string $marker = null): self
+    public static function toMultipleNumbers(array $numbers, string $text, string $channel, ?string $marker = null): self
     {
         return new self($numbers, $text, $channel, $marker);
     }

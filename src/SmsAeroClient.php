@@ -88,8 +88,8 @@ class SmsAeroClient
     public function send(
         ISms $sms,
         string $sign = '',
-        int $dateSend = null,
-        string $callbackUrl = null
+        ?int $dateSend = null,
+        ?string $callbackUrl = null
     ): Dto\SendSingleMessageResponse {
         try {
             $jsonResponse = $this->rawJsonClient->send($sms, $sign, $dateSend, $callbackUrl);
@@ -123,8 +123,8 @@ class SmsAeroClient
     public function bulkSend(
         ISms $sms,
         string $sign = '',
-        int $dateSend = null,
-        string $callbackUrl = null
+        ?int $dateSend = null,
+        ?string $callbackUrl = null
     ): Dto\SendBulkMessageResponse {
         try {
             $jsonResponse = $this->rawJsonClient->bulkSend($sms, $sign, $dateSend, $callbackUrl);
@@ -158,8 +158,8 @@ class SmsAeroClient
     public function testSend(
         ISms $sms,
         string $sign = 'SMS Aero',
-        int $dateSend = null,
-        string $callbackUrl = null
+        ?int $dateSend = null,
+        ?string $callbackUrl = null
     ): Dto\SendSingleMessageResponse {
         try {
             $jsonResponse = $this->rawJsonClient->testSend($sms, $sign, $dateSend, $callbackUrl);

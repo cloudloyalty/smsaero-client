@@ -17,30 +17,35 @@ class VoiceCallStatus
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $id;
 
     /**
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $status;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $code;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $phone;
 
     /**
      * @var float
      * @JMS\Type("float")
      */
+    #[JMS\Type('float')]
     public $cost;
 
     /**
@@ -48,6 +53,8 @@ class VoiceCallStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("timeCreate")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('timeCreate')]
     public $timeCreate;
 
     /**
@@ -55,5 +62,7 @@ class VoiceCallStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("timeUpdate")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('timeUpdate')]
     public $timeUpdate;
 }

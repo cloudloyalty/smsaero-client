@@ -28,7 +28,7 @@ class ClientGuzzle implements IClient
      */
     private $client;
 
-    public function __construct(IAuth $auth, ClientInterface $client = null)
+    public function __construct(IAuth $auth, ?ClientInterface $client = null)
     {
         $this->auth = $auth;
 

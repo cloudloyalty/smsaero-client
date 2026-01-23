@@ -19,6 +19,7 @@ class ViberStatus
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $id;
 
     /**
@@ -26,6 +27,8 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("dateCreate")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('dateCreate')]
     public $dateCreate;
 
     /**
@@ -33,42 +36,50 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("dateSend")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('dateSend')]
     public $dateSend;
 
     /**
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $count;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $sign;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $channel;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $text;
 
     /**
      * @var float
      * @JMS\Type("float")
      */
+    #[JMS\Type('float')]
     public $cost;
 
     /**
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $status;
 
     /**
@@ -76,6 +87,8 @@ class ViberStatus
      * @JMS\Type("string")
      * @JMS\SerializedName("extendStatus")
      */
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('extendStatus')]
     public $extendStatus;
 
     /**
@@ -83,6 +96,8 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("countSend")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('countSend')]
     public $countSend;
 
     /**
@@ -90,6 +105,8 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("countDelivered")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('countDelivered')]
     public $countDelivered;
 
     /**
@@ -97,6 +114,8 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("countWrite")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('countWrite')]
     public $countWrite;
 
     /**
@@ -104,6 +123,8 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("countUndelivered")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('countUndelivered')]
     public $countUndelivered;
 
     /**
@@ -111,5 +132,7 @@ class ViberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("countError")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('countError')]
     public $countError;
 }

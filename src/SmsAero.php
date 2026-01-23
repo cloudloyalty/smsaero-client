@@ -75,7 +75,7 @@ class SmsAero
      * @throws BaseSmsAeroException
      * @throws \InvalidArgumentException
      */
-    public function send(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
+    public function send(ISms $sms, string $sign = '', ?int $dateSend = null, ?string $callbackUrl = null): string
     {
         $number = $sms->getNumber();
         if ($number === null) {
@@ -108,7 +108,7 @@ class SmsAero
      * @throws BaseSmsAeroException
      * @throws \InvalidArgumentException
      */
-    public function testSend(ISms $sms, string $sign = 'SMS Aero', int $dateSend = null, string $callbackUrl = null): string
+    public function testSend(ISms $sms, string $sign = 'SMS Aero', ?int $dateSend = null, ?string $callbackUrl = null): string
     {
         $number = $sms->getNumber();
         if ($number === null) {
@@ -141,7 +141,7 @@ class SmsAero
      * @throws BaseSmsAeroException
      * @throws \InvalidArgumentException
      */
-    public function bulkSend(ISms $sms, string $sign = '', int $dateSend = null, string $callbackUrl = null): string
+    public function bulkSend(ISms $sms, string $sign = '', ?int $dateSend = null, ?string $callbackUrl = null): string
     {
         $numbers = $sms->getListNumbers();
         if ($numbers === null) {
@@ -186,7 +186,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function smsList(string $number = null, string $text = null, int $page = 1): string
+    public function smsList(?string $number = null, ?string $text = null, int $page = 1): string
     {
         return $this->client->request('/sms/list', [
             'page'   => $page,
@@ -205,7 +205,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function testSmsList(string $number = null, string $text = null, int $page = 1): string
+    public function testSmsList(?string $number = null, ?string $text = null, int $page = 1): string
     {
         return $this->client->request('/sms/testlist', [
             'page'   => $page,
@@ -275,7 +275,7 @@ class SmsAero
      * @return string
      * @throws BaseSmsAeroException
      */
-    public function blacklistList(string $number = null, int $page = 1): string
+    public function blacklistList(?string $number = null, int $page = 1): string
     {
         return $this->client->request('/blacklist/list', [
             'page'   => $page,

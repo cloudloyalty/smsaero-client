@@ -12,5 +12,6 @@ class VoiceCallResponse extends BaseResponse
      * @var VoiceCallStatus|null
      * @JMS\Type("Feech\SmsAero\Dto\VoiceCallStatus")
      */
+    #[JMS\Type('Feech\SmsAero\Dto\VoiceCallStatus')]
     public $data;
 }
