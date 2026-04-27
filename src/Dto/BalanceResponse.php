@@ -12,5 +12,6 @@ class BalanceResponse extends BaseResponse
      * @var BalanceResult
      * @JMS\Type("Feech\SmsAero\Dto\BalanceResult")
      */
+    #[JMS\Type('Feech\SmsAero\Dto\BalanceResult')]
     public $data;
 }

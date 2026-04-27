@@ -12,5 +12,6 @@ class BalanceResult
      * @var float
      * @JMS\Type("float")
      */
+    #[JMS\Type('float')]
     public $balance;
 }

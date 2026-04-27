@@ -12,11 +12,13 @@ class BaseResponse
      * @var boolean
      * @JMS\Type("boolean")
      */
+    #[JMS\Type('boolean')]
     public $success;
 
     /**
      * @var string|null
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $message;
 }

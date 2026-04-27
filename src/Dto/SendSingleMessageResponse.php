@@ -12,5 +12,6 @@ class SendSingleMessageResponse extends BaseResponse
      * @var SmsMessageResult
      * @JMS\Type("Feech\SmsAero\Dto\SmsMessageResult")
      */
+    #[JMS\Type('Feech\SmsAero\Dto\SmsMessageResult')]
     public $data;
 }

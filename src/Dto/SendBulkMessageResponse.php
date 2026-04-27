@@ -12,5 +12,6 @@ class SendBulkMessageResponse extends BaseResponse
      * @var SmsMessageResult[]
      * @JMS\Type("array<Feech\SmsAero\Dto\SmsMessageResult>")
      */
+    #[JMS\Type('array<Feech\SmsAero\Dto\SmsMessageResult>')]
     public $data;
 }

@@ -20,30 +20,35 @@ class SmsMessageResult
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $id;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $from;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $number;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $text;
 
     /**
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $status;
 
     /**
@@ -51,18 +56,22 @@ class SmsMessageResult
      * @JMS\Type("string")
      * @JMS\SerializedName("extendStatus")
      */
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('extendStatus')]
     public $extendStatus;
 
     /**
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $channel;
 
     /**
      * @var float
      * @JMS\Type("float")
      */
+    #[JMS\Type('float')]
     public $cost;
 
     /**
@@ -70,6 +79,8 @@ class SmsMessageResult
      * @JMS\Type("int")
      * @JMS\SerializedName("dateCreate")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('dateCreate')]
     public $dateCreate;
 
     /**
@@ -77,5 +88,7 @@ class SmsMessageResult
      * @JMS\Type("int")
      * @JMS\SerializedName("dateSend")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('dateSend')]
     public $dateSend;
 }

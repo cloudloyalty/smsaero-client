@@ -12,5 +12,6 @@ class FlashCallResponse extends BaseResponse
      * @var FlashCallStatus|null
      * @JMS\Type("Feech\SmsAero\Dto\FlashCallStatus")
      */
+    #[JMS\Type('Feech\SmsAero\Dto\FlashCallStatus')]
     public $data;
 }

@@ -1,10 +1,11 @@
 parameters:
     level: max
-    checkMissingIterableValueType: false
     reportUnmatchedIgnoredErrors: false
     paths:
         - src
         - tests
+    ignoreErrors:
+        - identifier: missingType.iterableValue
 
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon

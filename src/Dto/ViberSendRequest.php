@@ -99,7 +99,7 @@ class ViberSendRequest
         string $sign,
         string $channel,
         string $text,
-        string $marker = null
+        ?string $marker = null
     ): self {
         $request = new self();
         $request->number = $number;
@@ -122,7 +122,7 @@ class ViberSendRequest
         string $sign,
         string $channel,
         string $text,
-        string $marker = null
+        ?string $marker = null
     ): self {
         assert(count($numbers) > 0 && count($numbers) <= 50);
 

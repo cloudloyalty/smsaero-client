@@ -18,12 +18,14 @@ class ViberNumberStatus
      * @var string
      * @JMS\Type("string")
      */
+    #[JMS\Type('string')]
     public $number;
 
     /**
      * @var int
      * @JMS\Type("int")
      */
+    #[JMS\Type('int')]
     public $status;
 
     /**
@@ -31,6 +33,8 @@ class ViberNumberStatus
      * @JMS\Type("string")
      * @JMS\SerializedName("extendStatus")
      */
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('extendStatus')]
     public $extendStatus;
 
     /**
@@ -38,5 +42,7 @@ class ViberNumberStatus
      * @JMS\Type("int")
      * @JMS\SerializedName("dateSend")
      */
+    #[JMS\Type('int')]
+    #[JMS\SerializedName('dateSend')]
     public $dateSend;
 }

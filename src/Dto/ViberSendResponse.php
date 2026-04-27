@@ -12,5 +12,6 @@ class ViberSendResponse extends BaseResponse
      * @var ViberStatus|null
      * @JMS\Type("Feech\SmsAero\Dto\ViberStatus")
      */
+    #[JMS\Type('Feech\SmsAero\Dto\ViberStatus')]
     public $data;
 }
